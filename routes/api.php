@@ -27,10 +27,7 @@ Route::controller(TransactionController::class)->prefix('/transactions')->group(
     Route::get('{id}', 'show');
     Route::post('{id}/return', 'returnBook');
 });
-Route::get('/transactions', [TransactionController::class, 'index']);
-Route::post('/transactions', [TransactionController::class, 'store']);
-Route::get('/transactions/{id}', [TransactionController::class, 'show']);
-Route::post('/transactions/{id}/return', [TransactionController::class, 'returnBook']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [ِAuthController::class, 'logout']);
