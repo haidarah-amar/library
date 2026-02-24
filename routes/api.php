@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ِAuthController;
 use Illuminate\Http\Request;
@@ -19,6 +20,17 @@ Route::patch('changePassword', [ِAuthController::class, 'changePassword']);
 Route::get('categories', [CategoryController::class, 'index']);
 Route::apiResource('books', BookController::class)->only('index', 'show');
 Route::apiResource('authors', AuthorController::class)->only('index');
+
+Route::controller(TransactionController::class)->prefix('/transactions')->group(function () {
+    Route::get('', 'index');
+    Route::post('', 'store');
+    Route::get('{id}', 'show');
+    Route::post('{id}/return', 'returnBook');
+});
+Route::get('/transactions', [TransactionController::class, 'index']);
+Route::post('/transactions', [TransactionController::class, 'store']);
+Route::get('/transactions/{id}', [TransactionController::class, 'show']);
+Route::post('/transactions/{id}/return', [TransactionController::class, 'returnBook']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [ِAuthController::class, 'logout']);
