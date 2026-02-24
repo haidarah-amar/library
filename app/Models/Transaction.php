@@ -18,4 +18,13 @@ class Transaction extends Model
         'returned_at',
         'customer_return_amount'
     ];
+   public function bill()
+{
+    return $this->belongsTo(Bill::class);
+}
+
+public function book()
+{
+    return $this->belongsTo(Book::class);
+}
 }

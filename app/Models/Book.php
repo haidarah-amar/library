@@ -47,4 +47,9 @@ class Book extends Model
             ->withPivot('rate')
             ->withTimestamps();
     }
+
+    public function transactions()
+{
+    return $this->hasMany(Transaction::class);
+}
 }
