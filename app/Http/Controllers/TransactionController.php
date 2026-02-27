@@ -23,7 +23,7 @@ class TransactionController extends Controller
     $query = Transaction::with(['book', 'bill.customer']);
 
     if (!isset($validated['status'])) {
-        $query->whereIn('status', ['reserved', 'received']);
+        $query->whereIn('status', ['reserved', 'received', 'returned', 'expired']);
     } elseif ($validated['status'] === 'received') {
         $query->whereIn('status', ['received']);
     }  elseif ($validated['status'] === 'reserved') {
