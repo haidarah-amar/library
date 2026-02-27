@@ -23,14 +23,16 @@ class TransactionController extends Controller
     $query = Transaction::with(['book', 'bill.customer']);
 
     if (!isset($validated['status'])) {
-        $query->where('status', 'reserved');
-    } elseif ($validated['status'] === 'all') {
         $query->whereIn('status', ['reserved', 'received']);
+    } elseif ($validated['status'] === 'received') {
+        $query->whereIn('status', ['received']);
+    }  elseif ($validated['status'] === 'reserved') {
+                $query->where('status', 'reserved');
     } else {
         $query->where('status', $validated['status']);
     }
 
-    $transactions = $query->orderByDesc('created_at')->paginate(10);
+    $transactions = $query->orderByDesc('created_at')->paginate(10)  ;
 
     return response()->json([
         'data' => $transactions
@@ -48,7 +50,7 @@ public function store(TransactionRequest $request)
             ->lockForUpdate()
             ->firstOrFail();
 
-        if ($book->total_copies < 1) {
+        if ($book->stock < 1) {
             DB::rollBack();
             return response()->json([
                 'message' => 'الكتاب غير متوفر حالياً'
@@ -86,7 +88,7 @@ public function store(TransactionRequest $request)
         }
 
         // 🔹 إنقاص نسخة واحدة بعد نجاح العملية
-        $book->decrement('total_copies');
+        $book->decrement('stock');
 
         DB::commit();
 
@@ -152,7 +154,7 @@ public function returnBook(ReturnTransactionRequest $request, $id)
         ]);
 
         // زيادة عدد النسخ
-        $book->increment('total_copies');
+        $book->increment('stock');
 
         DB::commit();
 
