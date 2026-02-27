@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TransactionController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
@@ -83,4 +84,12 @@ Route::get('attach/{author}', function (Author $author) {
 Route::get('detach/{author}', function (Author $author) {
     $author->books()->detach(5);
     return $author->load('books');
+});
+
+
+Route::controller(TransactionController::class)->prefix('/transactions')->group(function () {
+    Route::get('', 'index');
+    Route::post('', 'store');
+    Route::get('{id}', 'show');
+    Route::post('{id}/return', 'returnBook');
 });
